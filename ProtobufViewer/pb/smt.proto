@@ -1,0 +1,659 @@
+syntax = "proto3";
+
+package sailyond.smt.protobuf;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+// base structs
+message Size {
+    int32 width = 1;
+    int32 height = 2;
+}
+
+message Sizef {
+    float width = 1;
+    float height = 2;
+}
+
+message Point {
+    float x = 1;
+    float y = 2;
+}
+
+message Rect {
+    Point top_left = 1;
+    Point bottom_right = 2;
+    int32 width = 3;
+    int32 height = 4;
+    int32 rotation_angle = 5;
+}
+
+message RotatedRect {
+    Point center = 1;
+    float width = 2;
+    float height = 3;
+    float angle = 4;
+}
+
+message Image {
+    enum Encoding {
+        RAW = 0;
+        JPEG = 1;
+        PNG = 2;
+        BMP = 3;
+        WEBP = 4;
+        URI = 5;
+        // JPEGXL/HEIF ...
+    }
+
+    enum ColorFormat {
+        NONE = 0;
+        RGB24 = 1;
+        BGR24 = 2;
+        // YUV420/YUV444 ...
+    }
+
+    Encoding encoding = 1;
+    ColorFormat color = 2;     // 只在图片格式为RAW时生效
+    int32 width = 3;           // TOOD: 区分编码（内存补齐）尺寸/原始尺寸/缩放补齐尺寸？
+    int32 height = 4;
+    float scale = 5;           // scale factor，单边等比缩放倍数，不等于1时，width/height为原始尺寸
+    bytes data = 6;            // image data or URI when encoding = URI
+}
+
+// enum struct
+enum ImageType {
+    IMAGE_TYPE_NONE = 0;
+    IMAGE_TYPE_WHITE = 1;
+    IMAGE_TYPE_RGB = 2;
+}
+
+enum Phase {
+    PHASE_NONE = 0;
+    PHASE_PROGRAMMING = 1;
+    PHASE_INSPECTION = 2;
+}
+
+enum UploadMode {
+    UPLOAD_MODE_NONE = 0;
+    UPLOAD_MODE_ONLY_DEFECTS = 1;
+}
+
+enum EditingStatus {
+    EDITING_STATUS_NONE = 0;
+    EDITING_STATUS_EDITING = 1;
+    EDITING_STATUS_FINISHED = 2;
+}
+
+enum DeviceMode {
+    DEVICE_MODE_BEFORE_STOVE = 0;
+    DEVICE_MODE_AFTER_STOVE = 1;
+}
+
+enum CADUnit {
+    CAD_UNIT_MM = 0;
+    CAD_UNIT_INCH = 1;
+    CAD_UNIT_MIL = 2;
+}
+
+enum ModelType {
+    MODEL_TYPE_NONE = 0;
+    MODEL_TYPE_DETECTION_COMPONENT = 1;
+    MODEL_TYPE_DETECTION_PAD = 2;
+    MODEL_TYPE_DETECTION_BODY_AND_SINGLEPIN = 3;
+    MODEL_TYPE_DETECTION_POLARITY = 4;
+    MODEL_TYPE_OCR_COMBINATION = 5;
+    MODEL_TYPE_DEFECT_COMPONENT = 6;
+    MODEL_TYPE_DEFECT_BODY = 7;
+    MODEL_TYPE_DEFECT_PAD = 8;
+    MODEL_TYPE_DEFECT_PINPAD = 9;
+    MODEL_TYPE_DEFECT_PADGROUP = 10;
+}
+
+enum PackageType {
+    PACKAGE_TYPE_NONE = 0;
+    PACKAGE_TYPE_AEC = 1;
+    PACKAGE_TYPE_CHIP = 2;
+    PACKAGE_TYPE_MLD = 3;
+    PACKAGE_TYPE_MELF = 4;
+    PACKAGE_TYPE_OSC = 5;
+
+    PACKAGE_TYPE_BGA = 6;
+    PACKAGE_TYPE_LCC = 7;
+    PACKAGE_TYPE_PLCC = 8;
+    PACKAGE_TYPE_QFP = 9;
+
+    PACKAGE_TYPE_SOD = 10;
+    PACKAGE_TYPE_SOT = 11;
+    PACKAGE_TYPE_SOIC = 12;
+    PACKAGE_TYPE_SOJ = 13;
+    PACKAGE_TYPE_SOP = 14;
+    PACKAGE_TYPE_SON = 15;
+
+    PACKAGE_TYPE_TO = 16;
+    PACKAGE_TYPE_XTAL = 17;
+    PACKAGE_TYPE_DIP = 18;
+
+    PACKAGE_TYPE_CONNECTOR = 19;
+    PACKAGE_TYPE_INS_JACK = 20;
+    PACKAGE_TYPE_LCC_PLCC = 21;
+    PACKAGE_TYPE_LED = 22;
+    PACKAGE_TYPE_PINHEADER = 23;
+    PACKAGE_TYPE_QFN = 24;
+    PACKAGE_TYPE_RADIO_FREQUENCY = 25;
+    PACKAGE_TYPE_SLOT = 26;
+
+    PACKAGE_TYPE_UNKNOWN = 99;
+    EXTERNAL_MARKPOINT = 100;
+}
+
+enum Polarity {
+    POLARITY_NONE = 0;
+    POLARITY_PRESENT = 1;
+    POLARITY_ABSENT = 2;
+    POLARITY_UNKNOWN = 3;
+}
+
+enum AlgorithmType {
+    ALGORITHM_TYPE_NONE = 0;
+    ALGORITHM_TYPE_NORMAL_TEMPLATE_MATCH = 1;
+    ALGORITHM_TYPE_SHAPE_BASED_TEMPLATE_MATCH = 2;
+    ALGORITHM_TYPE_COLOR = 3;
+    ALGORITHM_TYPE_SOLDER_SHORTAGE = 4;
+}
+
+enum ComponentPartType {
+    COMPONENT_PART_TYPE_NONE = 0;
+    COMPONENT_PART_TYPE_BODY = 1;
+    COMPONENT_PART_TYPE_PAD = 2;
+    COMPONENT_PART_TYPE_POLARITY = 3;
+    COMPONENT_PART_TYPE_PADGROUP = 4;
+    COMPONENT_PART_TYPE_SINGLEPIN = 5;
+    COMPONENT_PART_TYPE_DEFECT_REGION = 98;
+    COMPONENT_PART_TYPE_CUSTOMIZED = 99;
+
+    // only for filter
+    COMPONENT_PART_TYPE_PADWITHPIN = 100;
+    COMPONENT_PART_TYPE_PADWITHOUTPIN = 101;
+}
+
+enum DefectType {
+    DEFECT_TYPE_NONE = 0;
+    DEFECT_TYPE_MISSING = 1;
+    DEFECT_TYPE_MISALIGNED = 2;
+    DEFECT_TYPE_WRONG = 3;
+    DEFECT_TYPE_INSUFFICIENT_SOLDER = 4;
+    DEFECT_TYPE_EXCESSIVE_SOLDER = 5;
+    DEFECT_TYPE_PSEUDO_SOLDER = 6;
+    DEFECT_TYPE_SOLDER_SHORTAGE = 7;
+    DEFECT_TYPE_TOMBSTONE = 8;
+    DEFECT_TYPE_OVERTURNED = 9;
+    DEFECT_TYPE_SOLDER_BALL = 10;
+    //Add more...
+    DEFECT_TYPE_OTHERS = 99;
+}
+
+enum BinaryDefectType {
+    BINARY_DEFECT_TYPE_NONE = 0;
+    BINARY_DEFECT_TYPE_OK = 1;
+    BINARY_DEFECT_TYPE_NG = 2;
+}
+
+enum MatchMetricType {
+    TM_SQDIFF = 0;
+    TM_SQDIFF_NORMED = 1;
+    TM_CCORR = 2;
+    TM_CCORR_NORMED = 3;
+    TM_CCOEFF = 4;
+    TM_CCOEFF_NORMED = 5;
+}
+
+enum ColorCompareType {
+    COLOR_COMPARE_TYPE_ABSOLUTE = 0;
+    COLOR_COMPARE_TYPE_GREATER_THAN_REFERENCE = 1;
+    COLOR_COMPARE_TYPE_LESS_THAN_REFERENCE = 2;
+}
+
+// template structs
+
+message CADInfo {
+    int32 panel_id = 1;
+    string position = 2;
+    int32 rotation_angle = 3;
+    Point center = 4;
+}
+
+message CadPanelAlignInfo {
+    float angle = 1;
+    float algo_scale = 2;
+    repeated Point cad_points = 3;
+}
+
+message ComponentDetectInfo {
+    PackageType package_type = 1;
+    float confidence = 2;
+    RotatedRect box = 3;
+}
+
+message CadAlignInfo {
+    message CadPanelAlignInfoList {
+        repeated CadPanelAlignInfo align_info = 1;
+    }
+    float scale = 1;
+    bool swap_x_y = 2;
+    repeated CadPanelAlignInfoList align_info = 3;
+    repeated ComponentDetectInfo detect_info = 4;
+}
+
+message RequiredColumns{
+    string center_x = 1;
+    string center_y = 2;
+    string angle = 3;
+    string position_id = 4;
+    string material_id = 5;
+}
+
+message CADData{
+    uint64 width = 1;
+    uint64 height = 2;
+    float pixels_per_mm = 3;
+    bool flip_rotation = 4;
+    uint64 start_line = 5;
+    uint64 end_line = 6;
+    CADUnit unit = 7;
+    repeated uint64 col_order = 8;
+    bytes raw_content = 9;
+    RequiredColumns required_cols = 10;
+}
+
+
+message ModelConfig {
+    ModelType type = 1;
+    string uuid = 2;
+    string notes = 3;
+}
+
+message DefectModelConfig {
+    ModelType type = 1;
+    string defect_model_uuid = 2;
+}
+
+message DefectResult {
+    DefectType type = 1;
+    float score = 2;
+}
+
+message DefectAlgoResult {
+    BinaryDefectType binary_type = 1;
+    ModelType model_type = 2;
+    float binary_score = 3;
+    repeated DefectResult multi_class_results = 4;
+}
+
+message DefectRecommendedResult {
+    repeated DefectType defects = 1;
+    repeated DefectResult defects_w_score = 2;
+
+    bool checked = 11;
+    DefectType checked_type = 12;
+}
+
+message DefectModelThresholdConfig{
+    ModelType model_type = 1;
+    float threshold = 2;
+
+    float default_threshold = 11;
+    bool threshold_auto_adjusted = 12;
+    float threshold_auto_adjustment = 13;
+}
+
+message DefectDetectionConfig {
+    DefectType type = 1;
+    float tolerance = 2;
+    bool enabled = 3;
+
+    float default_tolerance = 11;
+    bool tolerance_auto_adjusted = 12;
+    float tolerance_auto_adjustment = 13;
+    bool tolerance_manual_adjusted = 14;
+    float tolerance_manual_adjustment = 15;
+
+    repeated DefectModelThresholdConfig defect_model_thresholds = 21;
+}
+
+message AlgorithmNormalTemplateMatchArgs {
+    // shared hyperparameters among different template match methods
+    float angle_lb = 1;             // lower bound of angle search range (degree)
+    float angle_ub = 2;             // upper bound of angle search range (degree)
+    float angle_step_size = 3;      // step size for angle search (degree)
+    uint32 n_targets = 4;              // maximum number of targets to be searched by template match
+    uint32 extended_margin = 5;        // extended margin to be add to all sides to form the search region (pixel)
+    uint32 n_layer = 6;                // number of layers to build in the image pyramids
+    uint32 min_template_area = 7;      // the minimum area of the template image (in the top layer of pyramid)
+    bool grayscale = 8;               // use grayscale image or bgr image
+
+    // method-specific hyperparameters
+    MatchMetricType match_metric = 21;      // opencv template match mode: TM_CCORR_NORMED(3),  TM_CCOEFF_NORMED(5)
+    float match_score_threshold = 22;       // minimum match score to qualify as a valid match
+}
+
+message AlgorithmNormalTemplateMatchThresholds {
+    float x_threshold = 1;
+    float y_threshold = 2;
+    float angle_threshold = 3;
+}
+
+message AlgorithmShapeBasedTemplateMatchArgs {
+    // shared hyperparameters among different template match methods
+    float angle_lb = 1;             // lower bound of angle search range (degree)
+    float angle_ub = 2;             // upper bound of angle search range (degree)
+    float angle_step_size = 3;      // step size for angle search (degree)
+    uint32 n_targets = 4;              // maximum number of targets to be searched by template match
+    uint32 extended_margin = 5;        // extended margin to be add to all sides to form the search region (pixel)
+    uint32 n_layer = 6;                // number of layers to build in the image pyramids
+    uint32 min_template_area = 7;      // the minimum area of the template image (in the top layer of pyramid)
+
+    // method-specific hyperparameters
+    uint32 n_features = 21;                 // number of features to be used for match
+    float train_threshold_weak = 22;
+    float train_threshold_strong = 23;
+    float match_score_threshold = 24;
+}
+
+message AlgorithmShapeBasedTemplateMatchThresholds {
+    float x_threshold = 1;
+    float y_threshold = 2;
+    float angle_threshold = 3;
+}
+
+message AlgorithmColorArgs {
+    uint32 hsv_v_range_min = 1;
+    uint32 hsv_v_range_max = 2;
+    bool hsv_hs_polygon_select_inside = 3;
+    repeated Point hsv_hs_polygon = 4;
+    ComponentPartType mask_part_type = 5;
+    ColorCompareType color_compare_type = 6;
+}
+
+message AlgorithmColorThresholds {
+    float masked_threshold_min = 1;
+    float masked_threshold_max = 2;
+}
+
+message AlgorithmSolderShortageArgs {
+    float binary_threshold = 1;
+    bool is_white_board = 2;
+    int32 padding_close_to_body = 3;
+    int32 padding_away_from_body = 4;
+    float inner_detection_ratio = 5;
+}
+
+message AlgorithmSolderShortageThresholds {
+    float area_threshold = 1;
+}
+
+message NonDLAlgorithmConfig {
+    DefectType defect_type = 1;
+    AlgorithmType algorithm_type = 2;
+    bool enabled = 3;
+    ImageType image_type = 4;
+
+    google.protobuf.Any algorithm_args = 11;
+    google.protobuf.Any algorithm_thresholds = 12;
+
+    optional string algo_result = 21;
+}
+
+// A ComponentPart sketches a sub-structure of a PCB component.
+message ComponentPart {
+    ComponentPartType type = 1;
+    RotatedRect rect = 2;
+    bool has_defect = 4;
+    int32 parent_id = 3;
+    int32 anchor_id = 6;
+    repeated int32 friends_ids = 5;
+
+    RotatedRect algo_rect = 11;
+    bool rect_auto_adjusted = 12;
+    RotatedRect rect_auto_adjustment = 13;
+    bool rect_manual_created = 14;
+    bool rect_manual_adjusted = 15;
+    RotatedRect rect_manual_adjustment = 16;
+
+    string annotation_label = 21;
+
+    repeated NonDLAlgorithmConfig non_dl_algo_configs = 31;
+
+    DefectAlgoResult defect_algo_result = 41;
+    repeated CrossCheckAlgoResult cross_check_algo_results = 42;
+}
+
+// A ComponentDetail comprises of all sub-substructures of a PCB component.
+message ComponentDetail {
+    RotatedRect rect = 1;
+
+    RotatedRect algo_rect = 11;
+    bool rect_auto_adjusted = 12;
+    RotatedRect rect_auto_adjustment = 13;
+    bool rect_manual_created = 14;
+    bool rect_manual_adjusted = 15;
+    RotatedRect rect_manual_adjustment = 16;
+
+    repeated ComponentPart parts = 21;
+}
+
+message OCRText {
+    RotatedRect rect = 1;
+    string text_0 = 2;
+    string text_180 = 3;
+    int32 model_text_idx = 4;
+    int32 distance = 5;
+}
+
+message OCRModelTextConfig {
+    bool selected = 1;
+    string text = 2;
+    uint32 char_err_tolerance = 3;
+    int32 model_text_idx = 4;
+}
+
+message CrossCheckAlgoResult {
+    int32 referenced_component_id = 1;
+    DefectAlgoResult defect_algo_result = 2;
+}
+
+enum ODBAngle {
+    ODB_ANGLE_NONE = 0;
+    ODB_ANGLE_0 = 1;
+    ODB_ANGLE_90 = 2;
+    ODB_ANGLE_180 = 3;
+    ODB_ANGLE_270 = 4;
+}
+
+message Component {
+    CADInfo cad_info = 1;
+    bool enabled = 2;
+    bool check_parts_enabled = 3;
+
+    // (1.6x) enlarged cropped image actully
+    bytes cropped_rgb_image = 11;
+    bytes cropped_white_image = 12;
+
+    PackageType algo_package_type = 21;
+    repeated OCRText algo_component_text = 22;
+    DefectAlgoResult defect_algo_result = 23;
+    repeated CrossCheckAlgoResult cross_check_algo_results = 24;
+    DefectRecommendedResult recommended_result = 25;
+    string annotation_label = 26;
+    float component_text_main_angle = 27;
+    // XXX: temp
+    DefectAlgoResult pad_defect_algo_result = 28;
+    repeated CrossCheckAlgoResult pad_cross_check_algo_results = 29;
+
+    ComponentDetail detail = 31;
+    ODBAngle odb_angle = 32;
+
+    repeated DefectDetectionConfig defect_detection_configs = 41;
+
+    repeated DefectModelThresholdConfig binary_defect_model_thresholds = 51;
+}
+
+// A ComponentModel is a manufacturer level aggregation of a PCB component.
+// In other words, two components that have the same ComponentModel should have an identical apperence.
+message ComponentModel {
+    string name = 1;
+    PackageType package_type = 2;
+    Polarity polarity = 3;
+    // string component_text = 4;
+
+    bool package_type_auto_adjusted = 11;
+    PackageType package_type_auto_adjustment = 12;
+    bool package_type_manual_adjusted = 13;
+    PackageType package_type_manual_adjustment = 14;
+
+    bool polarity_auto_adjusted = 21;
+    Polarity polarity_auto_adjustment = 22;
+    bool polarity_manual_adjusted = 23;
+    Polarity polarity_manual_adjustment = 24;
+    int32 polarity_referenced_component_id = 25;
+
+    float misaligned_shift_threshold = 31;
+    float default_misaligned_shift_threshold = 32;
+    bool misaligned_shift_threshold_auto_adjusted = 33;
+    float misaligned_shift_threshold_auto_adjustment = 34;
+    bool misaligned_shift_threshold_manual_adjusted = 35;
+    float misaligned_shift_threshold_manual_adjustment = 36;
+
+    float misaligned_shift_y_threshold = 91;
+    float default_misaligned_shift_y_threshold = 92;
+    bool misaligned_shift_y_threshold_auto_adjusted = 93;
+    float misaligned_shift_y_threshold_auto_adjustment = 94;
+    bool misaligned_shift_y_threshold_manual_adjusted = 95;
+    float misaligned_shift_y_threshold_manual_adjustment = 96;
+
+    float misaligned_angle_threshold = 41;
+    float default_misaligned_angle_threshold = 42;
+    bool misaligned_angle_threshold_auto_adjusted = 43;
+    float misaligned_angle_threshold_auto_adjustment = 44;
+    bool misaligned_angle_threshold_manual_adjusted = 45;
+    float misaligned_angle_threshold_manual_adjustment = 46;
+
+    float package_area_threshold = 51;
+    float default_package_area_threshold = 52;
+    bool package_area_threshold_auto_adjusted = 53;
+    float package_area_threshold_auto_adjustment = 54;
+    bool package_area_threshold_manual_adjusted = 55;
+    float package_area_threshold_manual_adjustment = 56;
+
+    repeated Component components = 61;
+
+    int32 odb_referenced_component_id = 71;
+
+    bool ocr_enabled = 81;
+    bool ocr_auto_adjusted = 82;
+    bool ocr_manual_adjusted = 83;
+    repeated OCRText algo_texts = 84;
+    repeated OCRModelTextConfig ocr_configs_auto = 85;
+    repeated OCRModelTextConfig ocr_configs_manual = 86;
+
+    RotatedRect avg_package_rect = 101;
+}
+
+// A Package encodes the packging level info a PCB component.
+message Package {
+    PackageType type = 1;
+
+    repeated ComponentModel component_models = 51;
+
+    repeated Component outliers = 61;
+}
+
+message TemplateThumbnail {
+    string uuid = 1;
+    string template_uuid = 2;
+    string rev = 3;
+    string project_name = 4;
+    EditingStatus editing_status = 5;
+    Phase phase = 6;
+    UploadMode upload_mode = 7;
+    DeviceMode device_mode = 8;
+    bytes thumbnail = 9;
+
+    repeated ModelConfig model_configs = 11;
+
+    google.protobuf.Timestamp created_at = 21;
+    google.protobuf.Timestamp updated_at = 22;
+}
+
+message TemplateOverview {
+    string uuid = 1;
+    string project_name = 2;
+    // TODO: semantic poorly defined.
+    string pcb_type = 3;
+    // TODO: semantic undefined.
+    string bom = 4;
+    string manufacturer = 5;
+    Sizef size = 6;
+    Size pixel_size = 7;
+    bytes preview = 8;
+    string device_id = 9;
+
+    int32 panel_rows = 11;      // 一图多板情况下 Panel 的行数
+    int32 panel_cols = 12;      // 一图多板情况下 Panel 的列数
+
+    string extra_info = 21;
+
+    Size board_image_size  = 31;    // 整图尺寸
+    Size original_image_size = 32;  // 原图尺寸，如果没有选区裁切，则等于0
+    Point selection_roi_tl = 33;    // 原图中裁切的选区，如果没有，则可存为0，但不代表0就是没有
+}
+
+message MarkPoint {
+    bool confirmed = 1;
+
+    RotatedRect rect = 11;
+
+    RotatedRect algo_rect = 21;
+    bool rect_manual_created = 22;
+    bool rect_manual_adjusted = 23;
+    RotatedRect rect_manual_adjustment = 24;
+}
+
+enum BarcodeStatus {
+    BARCODE_UNSET = 0;
+    BARCODE_NO_RESULT = 1;
+    BARCODE_RECOGNIZED = 2;
+};
+
+message Barcode {
+    RotatedRect rect = 1;
+    int32 panel_id = 2;
+
+    BarcodeStatus rec_status = 11;
+    string text = 12;
+    string format = 13;
+    repeated Point region = 14;
+}
+
+message Panel {
+    int32 panel_id = 1;
+
+    bool default_enabled = 11;
+    bool enabled_auto_adjusted = 12;
+    bool enabled_auto_adjustment = 13;
+    bool enabled_manual_adjusted = 14;
+    bool enabled_manual_adjustment = 15;
+};
+
+// A Detail includes a stitched image of a PCB and its potential panels.
+message TemplateDetail {
+    string uuid = 1;
+
+    repeated Package packages = 11;
+    repeated MarkPoint mark_points = 12;
+    CadAlignInfo cad_align_info = 13;
+    repeated Barcode barcodes = 14;
+
+    repeated Panel panels = 21;
+}
