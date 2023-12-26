@@ -1,5 +1,6 @@
 {
     "files": [
+        "0. Template.py",
         "1. UnionOperators.py",
         "main.py"
     ]
