@@ -2,15 +2,19 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 16. Destructuring Assignments Tricks
 
 
 class Sugar:
     def __init__(self):
-        pass
+        person = {'name': 'Yang', 'age': 30, 'location': 'Mars'}
+        name, age, loc = person.values()
+        print(name, age, loc)
 
     def elegant(self):
-        pass
+        person = {'name': 'Yang', 'age': 30, 'location': 'Mars'}
+        name, *others = person.values()
+        print(name, others)
 
 
 if __name__ == "__main__":

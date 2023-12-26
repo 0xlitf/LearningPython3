@@ -1,10 +1,11 @@
 # This Python file uses the following encoding: utf-8
 import sys
-from PySide6.QtWidgets import QApplication
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
 # 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
-class UnionOperators:
+
+
+class Sugar:
     def __init__(self):
         cities_us = {'New York City': 'US', 'Los Angeles': 'US'}
         cities_uk = {'London': 'UK', 'Birmingham': 'UK'}
@@ -18,7 +19,6 @@ class UnionOperators:
 
         print(cities)
         # {'New York City': 'US', 'Los Angeles': 'US', 'London': 'UK', 'Birmingham': 'UK', 'Tokyo': 'JP'}
-
 
     def elegant(self):
         cities_us = {'New York City': 'US', 'Los Angeles': 'US'}
@@ -34,9 +34,5 @@ class UnionOperators:
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    uo = UnionOperators()
-    uo.elegant()
-
-    sys.exit(app.exec())
+    sugar = Sugar()
+    sugar.elegant()

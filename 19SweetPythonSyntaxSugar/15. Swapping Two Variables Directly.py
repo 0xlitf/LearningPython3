@@ -2,15 +2,20 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 15. Swapping Two Variables Directly
 
 
 class Sugar:
     def __init__(self):
-        pass
+        ...
 
     def elegant(self):
-        pass
+        a = 10
+        b = 5
+        print(a, b)
+        a, b = b, a
+        print(a, b)
+        # 5 10
 
 
 if __name__ == "__main__":

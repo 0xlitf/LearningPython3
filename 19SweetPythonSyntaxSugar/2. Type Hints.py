@@ -2,15 +2,19 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 2. Type Hints: Make Your Python Programs Type Safe
+from typing import Final
 
 
 class Sugar:
     def __init__(self):
-        pass
+        DATABASE = 'MySQL'
 
     def elegant(self):
-        pass
+        DATABASE: Final = "MySQL"
+        print(DATABASE)
+        DATABASE = "MangoDB"
+        print(DATABASE)
 
 
 if __name__ == "__main__":

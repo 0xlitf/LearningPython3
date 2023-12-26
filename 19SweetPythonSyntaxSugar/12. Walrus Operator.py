@@ -2,15 +2,18 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 12. Walrus Operator: Assignments within Expressions
 
 
 class Sugar:
     def __init__(self):
-        pass
+        ...
 
     def elegant(self):
-        pass
+        # type at terminal
+        print("please type at terminal, ended enter: ")
+        while (line := input()) != "stop":
+            print("typed: " + line)
 
 
 if __name__ == "__main__":

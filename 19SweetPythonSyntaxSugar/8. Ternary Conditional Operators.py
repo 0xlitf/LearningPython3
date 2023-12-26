@@ -2,15 +2,25 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 8. Ternary Conditional Operators: Put If and Else Into One Line of Code
+
+
+a = [1, 2]
+b = [1, 2, 3]
 
 
 class Sugar:
     def __init__(self):
-        pass
+        short_one = ''
+        if len(a) < len(b):
+            short_one = a
+        else:
+            short_one = b
+        print(short_one)
 
     def elegant(self):
-        pass
+        short_one = a if len(a) < len(b) else b
+        print(short_one)
 
 
 if __name__ == "__main__":

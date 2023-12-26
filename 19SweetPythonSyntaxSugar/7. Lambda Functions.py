@@ -2,15 +2,18 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 7. Lambda Functions for Defining Small Anonymous Functions
 
 
 class Sugar:
     def __init__(self):
-        pass
+        ...
 
     def elegant(self):
-        pass
+        leaders = ["Warren Buffett", "Yang Zhou", "Tim Cook", "Elon Musk"]
+        leaders.sort(key=lambda x: len(x))
+        print(leaders)
+        # ['Tim Cook', 'Yang Zhou', 'Elon Musk', 'Warren Buffett']
 
 
 if __name__ == "__main__":

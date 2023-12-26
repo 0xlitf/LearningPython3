@@ -2,15 +2,17 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 19. Underscores in Numbers
 
 
 class Sugar:
     def __init__(self):
-        pass
+        a = 10000000000
+        print(a)
 
     def elegant(self):
-        pass
+        a = 10_000_000_000
+        print(a)
 
 
 if __name__ == "__main__":

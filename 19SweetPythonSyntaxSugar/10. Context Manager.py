@@ -2,15 +2,19 @@
 import sys
 
 # https://medium.com/techtofreedom/19-sweet-python-syntax-sugar-for-improving-your-coding-experience-37c4118fc6b1
-# 1. Union Operators: The Most Elegant Way To Merge Python Dictionaries
+# 10. Context Manager: Close Resources Automatically
 
 
 class Sugar:
     def __init__(self):
-        pass
+        f = open("test.txt", 'w')
+        f.write("Hi,Yang!")
+        # some logic here
+        f.close()
 
     def elegant(self):
-        pass
+        with open("test.txt", 'w') as f:
+            f.write("Hi, Yang!")
 
 
 if __name__ == "__main__":
