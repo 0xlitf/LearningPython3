@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 # 如果想返回一个html页面，就要return render()
 def html_test(request):
-    return render(request, 'html_test.html')
+    return render(request, 'html_test.html')  # 并非从当前templates目录U型你找，而是根据app的注册顺序，逐一去找templates目录，比如在根目录templates也有同名文件，会从当前app的templates目录中寻找
+# 如果在项目的settings.py中有指定'DIRS': [BASE_DIR / 'templates']，那么就会优先从根目录的templates中寻找
 
 def log(request):
     logger.debug('This is a debug message for log')
