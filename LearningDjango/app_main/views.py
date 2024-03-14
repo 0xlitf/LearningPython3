@@ -41,5 +41,16 @@ def home(request):
     logger.critical('This is a critical message')
     return HttpResponse("欢迎来到我的应用首页！")
 
+
+def signal_test(request):
+    from .signals import my_signal
+    # my_signal.send(sender=self.__class__, arg1="value1", arg2="value2")
+    v1 = "value1"
+    v2 = "value2"
+    my_signal.send(sender=None, arg1=v1, arg2=v2)
+
+    return HttpResponse(f'my_signal.send(arg1="{v1}", arg2="{v2}")！')
+
+
 def redirect(request):
     return HttpResponse("no page found, redirect to this page")
