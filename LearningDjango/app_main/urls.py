@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.root, name='root'),
     path('log/', views.log, name='log'),
     path('home/', views.home, name='home'),
+    path('signal_test/', views.signal_test, name='signal_test'),
     path('html_test/', views.html_test, name='html_test'),
     path('favicon.ico', RedirectView.as_view(url=static('favicon.ico'))),
     path('redirect/', views.redirect, name='redirect'),
