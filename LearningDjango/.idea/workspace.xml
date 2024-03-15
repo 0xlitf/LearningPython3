@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1170d5cb-7d0a-4ca1-bf69-b423c560bb5c" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LearningDjango/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/LearningDjango/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_main/static/2fSkP.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_main/templates/html_test.html" beforeDir="false" afterPath="$PROJECT_DIR$/app_main/templates/html_test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app_main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/app_main/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/html_test.html" beforeDir="false" />
-    </list>
+    <list default="true" id="1170d5cb-7d0a-4ca1-bf69-b423c560bb5c" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -91,7 +84,7 @@
       <workItem from="1710065955083" duration="108000" />
       <workItem from="1710066084598" duration="8000" />
       <workItem from="1710066104311" duration="18000" />
-      <workItem from="1710066951286" duration="8404000" />
+      <workItem from="1710066951286" duration="8624000" />
     </task>
     <servers />
   </component>
