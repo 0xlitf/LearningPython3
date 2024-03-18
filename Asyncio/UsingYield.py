@@ -111,6 +111,8 @@ print(*iterator)
 s = "abcdefgh"
 iter1 = iter(s)
 print(f"{isinstance(iter1, Iterator)} {iter1} {iter1}")  # True
+
+
 # 使用第二个参数的情况此处不描述了
 
 # 2.生成器函数
@@ -126,9 +128,10 @@ def fib_gen(n):
     f0, f1 = 0, 1
     for n in range(n):
         yield f0
-        f0, f1 = f1, f0+f1
+        f0, f1 = f1, f0 + f1
 
-print(fib_gen(5))   # <generator object fib_gen at 0x0000023A5BB78830>
+
+print(fib_gen(5))  # <generator object fib_gen at 0x0000023A5BB78830>
 
 g = fib_gen(6)  # g就是一个生成器对象（也是一种迭代器）
 print(next(g))  # 0
@@ -138,7 +141,9 @@ print(next(g))  # 2
 
 # 生成器是包含有__iter__()和__next__()方法的，所以可以直接使用for来迭代
 for x in fib_gen(5):
-    print(x, end=', ')
+    print(x)
+
+
 # 0, 1, 1, 2, 3,
 
 # yield from语法
@@ -146,3 +151,36 @@ for x in fib_gen(5):
 # yield from 后面需要加的是可迭代对象，它可以是普通的可迭代对象，也可以是迭代器，甚至是生成器。
 # yield from 主要用于生成器的嵌套，重点是帮我们自动处理内外层之间的异常问题。
 
+# 子生成器
+def average_gen():
+    total = 0
+    count = 0
+    average = 0
+    while True:
+        new_num = yield average
+        count += 1
+        total += new_num
+        average = total / count
+
+
+# 委托生成器 委托生成器的作用是：在调用方与子生成器之间建立一个双向通道。
+def proxy_gen():
+    while True:
+        yield from average_gen()
+
+
+# 调用方
+def main():
+    calc_average = proxy_gen()
+    print(calc_average)
+    next(calc_average)  # 预激下生成器
+    print(calc_average.send(10))  # 打印：10.0
+    print(calc_average.send(20))  # 打印：15.0
+    print(calc_average.send(30))  # 打印：20.0
+    print(calc_average.send(30))  # 打印：22.0
+    print(calc_average.send(30))  # 打印：24.0
+    print(calc_average.send(30))  # 打印：25.0
+
+
+if __name__ == '__main__':
+    main()
