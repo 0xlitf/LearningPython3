@@ -5,19 +5,22 @@ from mqttwrapper.hbmqtt_backend import run_script
 
 
 async def setup_db():
-    return {
+    ret = {
         "query_db": query_db
     }
+    print(f"context_callback: {ret}")
+    return ret
 
 
 async def query_db(value):
     # pretend this is some slow DB query, for example.
-    print(f"value: {value}")
+    print(f"query_db value: {value}")
     await asyncio.sleep(3)
     return f'{value}'
 
 
 async def callback(topic, payload, query_db):
+    print(f"callback: {topic}")
     db_result = await query_db(payload)
     print("Received payload {} on topic {}, db result: {}".format(payload, topic, db_result))
 
