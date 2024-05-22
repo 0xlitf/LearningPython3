@@ -145,6 +145,11 @@ import sys
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    "formatters": {  # 定义日志的格式
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s [%(module)s:%(lineno)d:%(funcName)s]: %(message)s"
+        },
+    },
     'handlers': {
         'console': {
             'level': 'DEBUG',

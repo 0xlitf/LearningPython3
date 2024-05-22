@@ -78,6 +78,8 @@ class app_main_config(AppConfig):
 
         # threading.Timer(1, task.scheduled_task_1).start()
 
-        asyncio.run(main())
+        # asyncio.run(main())
 
-        communication_in_threads()
+        # communication_in_threads()
+
+        
