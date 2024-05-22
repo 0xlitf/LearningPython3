@@ -1,7 +1,11 @@
+import logging
+
 from django.apps import AppConfig
 import threading
 from .scheduled_tasks import ScheduledTasks
 import asyncio
+
+logger = logging.getLogger(__name__)
 
 async def periodic_task(initial_delay, interval, func, *args, **kwargs):
     """执行定期异步任务，支持同步和异步函数"""
@@ -73,6 +77,7 @@ class app_main_config(AppConfig):
 
     def ready(self):
         print('app_main_config ready!')
+        logger.debug('app_main_config ready!')
 
         # task = ScheduledTasks()
 
