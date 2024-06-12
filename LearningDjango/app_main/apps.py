@@ -70,13 +70,16 @@ def communication_in_threads():
     q.join()  # 等待队列中的任务全部执行完成
 
 
+from django.conf import settings
+
+
 # app的启动类
 class app_main_config(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'app_main'
 
     def ready(self):
-        print('app_main_config ready!')
+        print(f'app_main_config ready! settings.DEBUG:{settings.DEBUG}')
         logger.debug('app_main_config ready!')
 
         # task = ScheduledTasks()
@@ -86,5 +89,7 @@ class app_main_config(AppConfig):
         # asyncio.run(main())
 
         # communication_in_threads()
+
+
 
         
