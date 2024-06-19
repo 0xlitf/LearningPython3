@@ -7,4 +7,4 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(["GET"])
 def hello_asgi(request):
-    return HttpResponse('{\"name\":\"hello_asgi\"}', content_type="application/json;charset=utf-8")
+    return HttpResponse('{\"name\":\"hello_asgi --reload 2\"}', content_type="application/json;charset=utf-8")
